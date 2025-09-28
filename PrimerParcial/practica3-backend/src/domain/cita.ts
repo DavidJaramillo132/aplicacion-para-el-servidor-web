@@ -1,10 +1,10 @@
+import { ICliente } from "./cliente";
+
 export interface ICita{
-    id: number;
-    clienteID: number;
+    id: string;
+    clienteID: string;
     fecha: Date;
-    hora: string;
     servicio: string;
-    comentarios?: string;
     tiempoEstimado: string;    
     estado: 'pendiente' | 'cancelada' | 'completada';
 }

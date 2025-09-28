@@ -1,7 +1,7 @@
 import type { ICita } from "./cita.ts";
 
 export interface ICliente {
-    id: number;
+    id: string;
     nombre: string;
     apellidos: string;
     email: string;
