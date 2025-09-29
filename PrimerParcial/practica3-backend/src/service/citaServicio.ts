@@ -75,7 +75,7 @@ export class CitaService {
             }
 
             await this.contrato.delete(id);
-            console.log(`✅ Cita ${id} eliminada exitosamente`);
+            console.log(`Cita ${id} eliminada exitosamente`);
 
             return true; 
 

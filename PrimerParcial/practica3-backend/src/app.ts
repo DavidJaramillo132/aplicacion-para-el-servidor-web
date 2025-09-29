@@ -1,11 +1,8 @@
-// ===== IMPORTS =====
 import { CitaService } from './service/citaServicio';
-
 import { obtenerDatosIniciales } from './infracture/relaciones';
 import { RepositorioCitas } from './infracture/repositorio';
 
 
-// ===== FUNCIÓN PRINCIPAL DE INICIALIZACIÓN =====
 async function inicializarAplicacion() {
   console.log("Iniciando aplicación...\n");
   
@@ -120,9 +117,6 @@ async function mostrarInformacionSistema() {
 // Ejecucion principal
 async function main() {
   console.log("Gestion de citas");
-  
-  // Por defecto ejecutar demostración
-  console.log("Demostracion automatica...\n");
   
   //await mostrarInformacionSistema();
   await demostrarFuncionalidades();
