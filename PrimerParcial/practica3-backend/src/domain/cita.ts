@@ -1,4 +1,3 @@
-import { ICliente } from "./cliente";
 
 export interface ICita{
     id: string;
