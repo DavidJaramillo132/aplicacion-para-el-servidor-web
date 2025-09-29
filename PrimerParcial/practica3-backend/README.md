@@ -30,7 +30,7 @@ Kevin Calderon
 - **Kelly**: Interfaces IContratoCita, ICita, ICliente, arquitectura de dominio
 - **Kevin**: Datos iniciales, relaciones entre entidades, configuración de memoria
 
-## 🏗️ Arquitectura del Sistema
+## Arquitectura del Sistema
 
 ### Arquitectura Implementada: **Layered Architecture con DDD**
 

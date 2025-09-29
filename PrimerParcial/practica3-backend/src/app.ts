@@ -9,13 +9,13 @@ async function inicializarAplicacion() {
   // Obtener datos iniciales
   const datos = obtenerDatosIniciales();
   console.log("Datos cargados:");
-  console.log(`   - Clientes: ${datos.clientes.length}`);
-  console.log(`   - Citas: ${datos.citas.length}`);
-  console.log(`   - Administradores: ${datos.admins.length}`);
+  console.log(`- Clientes: ${datos.clientes.length}`);
+  console.log(`- Citas: ${datos.citas.length}`);
+  console.log(`- Administradores: ${datos.admins.length}`);
 
   // Crear repositorio en memoria
   const citaRepository = new RepositorioCitas(datos.citas);
-  
+
   // Crear servicio de citas
   const citaService = new CitaService(citaRepository);
   
@@ -50,7 +50,7 @@ async function demostrarFuncionalidades() {
       const nuevaCita = await citaService.agendar(
         clienteEjemplo,
         "Consulta de Seguimiento",
-        new Date("2025-10-02T10:00:00Z"),
+        new Date("2025-10-02T10:00:00"),
         45,
         "pendiente"
       );
@@ -88,37 +88,11 @@ async function demostrarFuncionalidades() {
   }
 }
 
-// información del sistema
-async function mostrarInformacionSistema() {
-  console.log("INFORMACIÓN DEL SISTEMA");  
-  const datos = obtenerDatosIniciales();
-  
-  console.log("\nClientes:");
-  datos.clientes.forEach(cliente => {
-    console.log(`${cliente.nombre} ${cliente.apellidos} (${cliente.email})`);
-  });
-
-  console.log("\nServicio Disponible:");
-  datos.tiposDeServicio.forEach(servicio => {
-    console.log(`${servicio}`);
-  });
-  
-  console.log("\nHorarios Disponibles:");
-  console.log(`${datos.horariosDisponibles.join(", ")}`);
-  
-  console.log("\nAdmin:");
-  datos.admins.forEach(admin => {
-    console.log(`${admin.nombre} (${admin.email})`);
-  });
-}
-
-
 
 // Ejecucion principal
 async function main() {
   console.log("Gestion de citas");
   
-  //await mostrarInformacionSistema();
   await demostrarFuncionalidades();
   
 }

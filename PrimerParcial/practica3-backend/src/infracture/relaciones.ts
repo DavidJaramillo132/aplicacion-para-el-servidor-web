@@ -30,13 +30,4 @@ export function inicializarRelaciones() {
     cliente.citas = citasIniciales.filter(cita => cita.clienteID === cliente.id);
   });
 
-  // Asignar citas pendientes a filas (simulación de cola)
-  const citasPendientes = citasIniciales.filter(cita => cita.estado === 'pendiente');
-  citasPendientes.forEach((cita, index) => {
-    const filaIndex = index % filasIniciales.length;
-    const fila = filasIniciales[filaIndex];
-    if (fila) {
-      fila.cita.push(cita);
-    }
-  });
 }
