@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cliente - FilaVirtual</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .client-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        
+        .search-section {
+            padding: 2rem 0;
+            background: #f8f9fa;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-tag.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .business-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .business-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .business-image {
+            height: 150px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .business-info {
+            padding: 1.5rem;
+        }
+        
+        .business-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .stars {
+            color: #ffc107;
+        }
+        
+        .queue-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .my-appointments {
+            padding: 2rem 0;
+        }
+        
+        .appointment-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .appointment-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="client-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1>¡Hola, Ana!</h1>
+                    <p>Encuentra y reserva en tus negocios favoritos</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline" onclick="showModal('profileModal')">
+                        <i class="fas fa-user"></i> Mi Perfil
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="container">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Buscar negocios, servicios, ubicación..." id="searchInput">
+                <button class="btn btn-primary" onclick="searchBusinesses()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button class="btn btn-secondary" onclick="showModal('filterModal')">
+                    <i class="fas fa-filter"></i> Filtros
+                </button>
+            </div>
+            
+            <div class="filter-tags">
+                <div class="filter-tag active" onclick="filterByType('all')">Todos</div>
+                <div class="filter-tag" onclick="filterByType('restaurant')">Restaurantes</div>
+                <div class="filter-tag" onclick="filterByType('hospital')">Hospitales</div>
+                <div class="filter-tag" onclick="filterByType('veterinary')">Veterinarias</div>
+                <div class="filter-tag" onclick="filterByType('salon')">Salones</div>
+                <div class="filter-tag" onclick="filterByType('bank')">Bancos</div>
+            </div>
+
+            <!-- Business Grid -->
+            <div class="business-grid">
+                <!-- Restaurant -->
+                <div class="business-card" data-type="restaurant">
+                    <div class="business-image restaurant">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="business-info">
+                        <h3>Restaurante El Buen Sabor</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Flavio Reyes, Manta</p>
+                        <div class="business-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span>4.2 (156 reseñas)</span>
+                        </div>
+                        <div class="queue-status">
+                            <div>
+                                <small>Tiempo de espera</small>
+                                <div><strong>15-20 min</strong></div>
+                            </div>
+                            <div>
+                                <small>En fila</small>
+                                <div><strong>8 personas</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="showBusinessDetails('restaurant1')">
+                            Ver Servicios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hospital -->
+                <div class="business-card" data-type="hospital">
+                    <div class="business-image hospital">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div class="business-info">
+                        <h3>Hospital San Rafael</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Calle 23 y Av. 4 de Noviembre</p>
+                        <div class="business-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.8 (89 reseñas)</span>
+                        </div>
+                        <div class="queue-status">
+                            <div>
+                                <small>Próxima cita</small>
+                                <div><strong>Hoy 3:00 PM</strong></div>
+                            </div>
+                            <div>
+                                <small>Disponible</small>
+                                <div><strong>Consulta</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="showBusinessDetails('hospital1')">
+                            Agendar Cita
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Veterinary -->
+                <div class="business-card" data-type="veterinary">
+                    <div class="business-image veterinary">
+                        <i class="fas fa-paw"></i>
+                    </div>
+                    <div class="business-info">
+                        <h3>Veterinaria Mundo Animal</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Circunvalación, Manta</p>
+                        <div class="business-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span>4.5 (67 reseñas)</span>
+                        </div>
+                        <div class="queue-status">
+                            <div>
+                                <small>Tiempo de espera</small>
+                                <div><strong>30-45 min</strong></div>
+                            </div>
+                            <div>
+                                <small>Especialidad</small>
+                                <div><strong>Consulta</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="showBusinessDetails('veterinary1')">
+                            Ver Servicios
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Salon -->
+                <div class="business-card" data-type="salon">
+                    <div class="business-image salon">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <div class="business-info">
+                        <h3>Salón Elegancia</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Calle 15 y Av. 105, Manta</p>
+                        <div class="business-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span>4.9 (124 reseñas)</span>
+                        </div>
+                        <div class="queue-status">
+                            <div>
+                                <small>Disponible</small>
+                                <div><strong>Mañana</strong></div>
+                            </div>
+                            <div>
+                                <small>Especialidad</small>
+                                <div><strong>Cortes</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="showBusinessDetails('salon1')">
+                            Reservar Turno
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bank -->
+                <div class="business-card" data-type="bank">
+                    <div class="business-image bank">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="business-info">
+                        <h3>Banco Nacional</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Av. Malecón, Centro</p>
+                        <div class="business-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span>4.1 (203 reseñas)</span>
+                        </div>
+                        <div class="queue-status">
+                            <div>
+                                <small>Tiempo de espera</small>
+                                <div><strong>10-15 min</strong></div>
+                            </div>
+                            <div>
+                                <small>En fila</small>
+                                <div><strong>12 personas</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="showBusinessDetails('bank1')">
+                            Tomar Turno
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Appointments -->
+    <div class="my-appointments">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Mis Citas</h2>
+                <button class="btn btn-secondary" onclick="showModal('appointmentHistoryModal')">
+                    <i class="fas fa-history"></i> Ver Historial
+                </button>
+            </div>
+
+            <!-- Active Appointment -->
+            <div class="appointment-card" style="border-left-color: #28a745;">
+                <div class="appointment-header">
+                    <h4>Restaurante El Buen Sabor</h4>
+                    <span class="status-badge status-active">En fila - Posición #4</span>
+                </div>
+                <div class="appointment-details">
+                    <div>
+                        <small>Servicio</small>
+                        <div><strong>Mesa para 3 personas</strong></div>
+                    </div>
+                    <div>
+                        <small>Fecha y Hora</small>
+                        <div><strong>Hoy, 20:30</strong></div>
+                    </div>
+                    <div>
+                        <small>Tiempo estimado</small>
+                        <div><strong>35 minutos</strong></div>
+                    </div>
+                    <div>
+                        <small>Ubicación</small>
+                        <div>Av. Flavio Reyes, Manta</div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-warning btn-sm" onclick="postponeAppointment('001')">
+                        <i class="fas fa-clock"></i> Reprogramar
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="cancelAppointment('001')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="getDirections('001')">
+                        <i class="fas fa-directions"></i> Cómo llegar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upcoming Appointment -->
+            <div class="appointment-card" style="border-left-color: #ffc107;">
+                <div class="appointment-header">
+                    <h4>Veterinaria Mundo Animal</h4>
+                    <span class="status-badge status-pending">Programada</span>
+                </div>
+                <div class="appointment-details">
+                    <div>
+                        <small>Servicio</small>
+                        <div><strong>Consulta veterinaria</strong></div>
+                    </div>
+                    <div>
+                        <small>Fecha y Hora</small>
+                        <div><strong>Mañana, 15:00</strong></div>
+                    </div>
+                    <div>
+                        <small>Mascota</small>
+                        <div><strong>Luna (Gato)</strong></div>
+                    </div>
+                    <div>
+                        <small>Dr. Asignado</small>
+                        <div>Dr. Carlos Mendoza</div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-warning btn-sm" onclick="postponeAppointment('002')">
+                        <i class="fas fa-clock"></i> Reprogramar
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="cancelAppointment('002')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button class="btn btn-success btn-sm" onclick="addToCalendar('002')">
+                        <i class="fas fa-calendar-plus"></i> Agregar al calendario
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Business Details Modal -->
+    <div id="businessDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('businessDetailsModal')">&times;</span>
+            <h2 id="businessModalTitle">Servicios Disponibles</h2>
+            <div id="businessModalContent" style="margin-top: 2rem;">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            <h2>Reservar Cita</h2>
+            <form style="margin-top: 2rem;" onsubmit="bookAppointment(event)">
+                <div class="form-group">
+                    <label for="selectedService">Servicio:</label>
+                    <input type="text" id="selectedService" class="form-control" readonly>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="appointmentDate">Fecha:</label>
+                        <input type="date" id="appointmentDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentTime">Hora:</label>
+                        <input type="time" id="appointmentTime" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="specialRequests">Solicitudes especiales:</label>
+                    <textarea id="specialRequests" class="form-control" rows="3" placeholder="Alergias, preferencias, etc."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Confirmar Reserva</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('profileModal')">&times;</span>
+            <h2>Mi Perfil</h2>
+            <form style="margin-top: 2rem;">
+                <div class="form-group">
+                    <label for="profileName">Nombre:</label>
+                    <input type="text" id="profileName" class="form-control" value="Ana Silva">
+                </div>
+                <div class="form-group">
+                    <label for="profileEmail">Email:</label>
+                    <input type="email" id="profileEmail" class="form-control" value="ana.silva@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="profilePhone">Teléfono:</label>
+                    <input type="tel" id="profilePhone" class="form-control" value="+593 99 345 6789">
+                </div>
+                <div class="form-group">
+                    <label for="profileAddress">Dirección:</label>
+                    <input type="text" id="profileAddress" class="form-control" value="Manta, Ecuador">
+                </div>
+                <div class="form-group">
+                    <label>Notificaciones:</label>
+                    <div>
+                        <input type="checkbox" id="emailNotif" checked> Notificaciones por email<br>
+                        <input type="checkbox" id="smsNotif" checked> Notificaciones por SMS<br>
+                        <input type="checkbox" id="pushNotif" checked> Notificaciones push
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Client specific functions
+        function filterByType(type) {
+            // Update active filter tag
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter business cards
+            const cards = document.querySelectorAll('.business-card');
+            cards.forEach(card => {
+                if (type === 'all' || card.dataset.type === type) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchBusinesses() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.business-card');
+            
+            cards.forEach(card => {
+                const businessName = card.querySelector('h3').textContent.toLowerCase();
+                const location = card.querySelector('p').textContent.toLowerCase();
+                
+                if (businessName.includes(searchTerm) || location.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function showBusinessDetails(businessId) {
+            const businessData = {
+                restaurant1: {
+                    title: "Restaurante El Buen Sabor - Servicios",
+                    services: [
+                        { name: "Mesa para 2", price: "$25", time: "90 min", available: true },
+                        { name: "Mesa para 4", price: "$45", time: "120 min", available: true },
+                        { name: "Mesa para 6", price: "$65", time: "150 min", available: false },
+                        { name: "Para llevar", price: "Variable", time: "15 min", available: true },
+                        { name: "Delivery", price: "Variable + $3", time: "30-45 min", available: true }
+                    ]
+                },
+                hospital1: {
+                    title: "Hospital San Rafael - Servicios",
+                    services: [
+                        { name: "Consulta General", price: "$25", time: "30 min", available: true },
+                        { name: "Medicina Interna", price: "$45", time: "45 min", available: true },
+                        { name: "Cardiología", price: "$60", time: "60 min", available: false },
+                        { name: "Laboratorio", price: "$15", time: "15 min", available: true }
+                    ]
+                }
+            };
+
+            const data = businessData[businessId];
+            if (data) {
+                document.getElementById('businessModalTitle').textContent = data.title;
+                
+                let content = '<div class="services-grid">';
+                data.services.forEach(service => {
+                    const status = service.available ? 'Disponible' : 'No disponible';
+                    const btnClass = service.available ? 'btn-primary' : 'btn-secondary';
+                    const btnText = service.available ? 'Reservar' : 'No disponible';
+                    
+                    content += `
+                        <div class="card mb-2">
+                            <div class="d-flex justify-content-between align-items-center p-2">
+                                <div>
+                                    <h4>${service.name}</h4>
+                                    <p>Precio: ${service.price} | Duración: ${service.time}</p>
+                                </div>
+                                <div>
+                                    <span class="status-badge ${service.available ? 'status-active' : 'status-inactive'}">${status}</span>
+                                    <button class="btn btn-sm ${btnClass} mt-1" ${service.available ? `onclick="selectService('${service.name}')"` : 'disabled'}>
+                                        ${btnText}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                content += '</div>';
+                
+                document.getElementById('businessModalContent').innerHTML = content;
+                showModal('businessDetailsModal');
+            }
+        }
+
+        function selectService(serviceName) {
+            document.getElementById('selectedService').value = serviceName;
+            closeModal('businessDetailsModal');
+            showModal('bookingModal');
+        }
+
+        function bookAppointment(event) {
+            event.preventDefault();
+            showNotification('¡Cita reservada exitosamente!', 'success');
+            closeModal('bookingModal');
+        }
+
+        function postponeAppointment(appointmentId) {
+            showModal('bookingModal');
+            showNotification('Selecciona nueva fecha y hora', 'info');
+        }
+
+        function cancelAppointment(appointmentId) {
+            if(confirm('¿Estás seguro de que quieres cancelar esta cita?')) {
+                showNotification('Cita cancelada exitosamente', 'warning');
+            }
+        }
+
+        function getDirections(appointmentId) {
+            showNotification('Abriendo direcciones en Google Maps...', 'info');
+        }
+
+        function addToCalendar(appointmentId) {
+            showNotification('Cita agregada al calendario', 'success');
+        }
+
+        // Initialize with today's date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').value = today;
+        });
+    </script>
+</body>
+</html>
