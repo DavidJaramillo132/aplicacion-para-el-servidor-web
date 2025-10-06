@@ -13,7 +13,7 @@ export class HorarioAtencion {
     type: "int",
     nullable: true
   })
-  dia_semana?: number; // 1 = lunes, 7 = domingo (1-7)
+  dia_semana?: number; // 0 (Domingo) a 6 (Sábado)
 
   @Column({ type: "time" })
   hora_inicio!: string;
