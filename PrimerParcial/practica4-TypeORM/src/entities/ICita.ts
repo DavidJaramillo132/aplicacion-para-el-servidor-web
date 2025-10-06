@@ -23,7 +23,7 @@ export class Cita {
   hora_fin!: string;
 
   @Column({ 
-    type: "enum", 
+    type: "simple-enum", 
     enum: ["pendiente", "atendida", "cancelada"], 
     default: "pendiente" 
   })

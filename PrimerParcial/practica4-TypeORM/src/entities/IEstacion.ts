@@ -12,7 +12,7 @@ export class Estacion {
   nombre!: string;
 
   @Column({ 
-    type: "enum", 
+    type: "simple-enum", 
     enum: ["activo", "inactivo"], 
     default: "activo" 
   })

@@ -19,7 +19,7 @@ export class Fila {
   hora_fin!: string;
 
   @Column({ 
-    type: "enum", 
+    type: "simple-enum", 
     enum: ["abierta", "cerrada"], 
     default: "abierta" 
   })
