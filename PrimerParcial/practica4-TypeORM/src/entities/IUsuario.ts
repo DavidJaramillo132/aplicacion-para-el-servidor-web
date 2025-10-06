@@ -21,7 +21,7 @@ export class Usuario {
   password!: string;
 
   @Column({ 
-    type: "enum", 
+    type: "simple-enum", 
     enum: ["cliente", "adminNegocio"],
     name: "rol"
   })
