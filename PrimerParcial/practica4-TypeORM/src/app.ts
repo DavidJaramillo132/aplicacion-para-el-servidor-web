@@ -1,17 +1,22 @@
 import { AppDataSource } from "./data-source";
-import { Usuario } from "./entities/index";
 import { UsuarioService } from "./service/UsuarioService";
 
+import { seed } from "./seed/datos";
 
-function main() {
-  AppDataSource.initialize().then(async () => {
-    const usuarioService = new UsuarioService(); // crea la instancia
-    const usuarios = await usuarioService.findAll(); // llama al método
+async function main() {
+  // semilla
+  await seed();
 
-    console.log("✅ Conectado a SQLite");
-    console.log("Usuarios:", usuarios);
-  });
+  // App inicial
+  await AppDataSource.initialize();
+  const usuarioService = new UsuarioService();
+  const usuarios = await usuarioService.findAll();
+
+  console.log("onectado a SQLite");
+  console.log("Usuarios:", usuarios);
+
+
+  
 }
+
 main();
-
-
