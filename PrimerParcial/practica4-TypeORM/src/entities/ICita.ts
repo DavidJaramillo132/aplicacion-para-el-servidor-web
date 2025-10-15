@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from "typeorm";
+`import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from "typeorm";
 import { Usuario } from "./IUsuario";
 import { Servicio } from "./IServicio";
 
@@ -47,3 +47,4 @@ export class Cita {
   @JoinColumn({ name: "servicio_id" })
   servicio?: Servicio;
 }
+`
