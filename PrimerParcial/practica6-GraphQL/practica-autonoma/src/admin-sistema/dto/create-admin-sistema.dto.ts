@@ -18,5 +18,3 @@ export class CreateAdminSistemaDto {
   @IsString()
   telefono?: string;
 }
-
-

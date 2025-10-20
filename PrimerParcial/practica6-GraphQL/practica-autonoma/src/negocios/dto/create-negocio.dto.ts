@@ -35,5 +35,3 @@ export class CreateNegocioDto {
   @IsString()
   hora_atencion?: string;
 }
-
-

@@ -32,5 +32,3 @@ export class HorariosAtencionController {
     return this.service.remove(id);
   }
 }
-
-
