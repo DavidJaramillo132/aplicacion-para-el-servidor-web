@@ -1,0 +1,214 @@
+###############################################
+# API REST - Práctica 4
+# Estados y Tipos
+###############################################
+
+@baseUrl = http://localhost:3001
+
+###############################################
+# ESTADOS
+###############################################
+
+### 1. Crear Estado - Activo
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Activo",
+  "descripcion": "Estado que indica que el registro está activo y disponible",
+  "codigo": "ACT",
+  "activo": true
+}
+
+### 2. Crear Estado - Inactivo
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Inactivo",
+  "descripcion": "Estado que indica que el registro está inactivo",
+  "codigo": "INA",
+  "activo": true
+}
+
+### 3. Crear Estado - Pendiente
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Pendiente",
+  "descripcion": "En espera de aprobación",
+  "codigo": "PEN",
+  "activo": true
+}
+
+### 4. Crear Estado - Cancelado
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Cancelado",
+  "descripcion": "Registro cancelado",
+  "codigo": "CAN",
+  "activo": true
+}
+
+### 5. Obtener todos los Estados
+GET {{baseUrl}}/estados
+
+### 6. Obtener Estado por ID (cambiar el 1 por el ID que quieras)
+GET {{baseUrl}}/estados/1
+
+### 7. Actualizar Estado
+PATCH {{baseUrl}}/estados/1
+Content-Type: application/json
+
+{
+  "descripcion": "Estado actualizado - Registro completamente activo",
+  "activo": true
+}
+
+### 8. Eliminar Estado (¡Cuidado! Esto elimina el registro)
+DELETE {{baseUrl}}/estados/1
+
+### 9. Intentar obtener un Estado que no existe (debería dar 404)
+GET {{baseUrl}}/estados/999
+
+### 10. Intentar crear Estado con validación inválida (debería dar 400)
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "AB",
+  "codigo": "A"
+}
+
+
+###############################################
+# TIPOS
+###############################################
+
+### 11. Crear Tipo - Cliente VIP
+POST {{baseUrl}}/tipos
+Content-Type: application/json
+
+{
+  "nombre": "Cliente VIP",
+  "descripcion": "Tipo de cliente con beneficios especiales y prioridad en los servicios",
+  "codigo": "CLVIP",
+  "categoria": "Clientes",
+  "activo": true
+}
+
+### 12. Crear Tipo - Cliente Regular
+POST {{baseUrl}}/tipos
+Content-Type: application/json
+
+{
+  "nombre": "Cliente Regular",
+  "descripcion": "Cliente estándar sin beneficios especiales",
+  "codigo": "CLREG",
+  "categoria": "Clientes",
+  "activo": true
+}
+
+### 13. Crear Tipo - Evento Corporativo
+POST {{baseUrl}}/tipos
+Content-Type: application/json
+
+{
+  "nombre": "Evento Corporativo",
+  "descripcion": "Tipo de evento para empresas y organizaciones",
+  "codigo": "EVCORP",
+  "categoria": "Eventos",
+  "activo": true
+}
+
+### 14. Crear Tipo - Evento Social
+POST {{baseUrl}}/tipos
+Content-Type: application/json
+
+{
+  "nombre": "Evento Social",
+  "descripcion": "Evento particular o familiar",
+  "codigo": "EVSOC",
+  "categoria": "Eventos",
+  "activo": true
+}
+
+### 15. Crear Tipo - Servicio Premium
+POST {{baseUrl}}/tipos
+Content-Type: application/json
+
+{
+  "nombre": "Servicio Premium",
+  "descripcion": "Servicio de alta gama con atención personalizada",
+  "codigo": "SRPRE",
+  "categoria": "Servicios",
+  "activo": true
+}
+
+### 16. Obtener todos los Tipos
+GET {{baseUrl}}/tipos
+
+### 17. Obtener Tipo por ID (cambiar el 1 por el ID que quieras)
+GET {{baseUrl}}/tipos/1
+
+### 18. Actualizar Tipo
+PATCH {{baseUrl}}/tipos/1
+Content-Type: application/json
+
+{
+  "descripcion": "Cliente VIP con acceso prioritario, descuentos especiales y atención personalizada",
+  "categoria": "Clientes Premium"
+}
+
+### 19. Eliminar Tipo (¡Cuidado! Esto elimina el registro)
+DELETE {{baseUrl}}/tipos/1
+
+### 20. Intentar obtener un Tipo que no existe (debería dar 404)
+GET {{baseUrl}}/tipos/999
+
+### 21. Intentar crear Tipo con validación inválida (debería dar 400)
+POST {{baseUrl}}/tipos
+Content-Type: application/json
+
+{
+  "nombre": "XY",
+  "codigo": "Z"
+}
+
+
+###############################################
+# CASOS DE PRUEBA ADICIONALES
+###############################################
+
+### 22. Intentar crear Estado duplicado (debería dar 409 Conflict)
+# Primero crea un estado, luego intenta crearlo de nuevo
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Test Duplicado",
+  "codigo": "TEST"
+}
+
+### 23. Intentar usar ID no numérico (debería dar 400)
+GET {{baseUrl}}/estados/abc
+
+### 24. Crear Estado sin campos opcionales
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Simple",
+  "codigo": "SIM"
+}
+
+### 25. Actualizar solo un campo
+PATCH {{baseUrl}}/estados/1
+Content-Type: application/json
+
+{
+  "activo": false
+}
