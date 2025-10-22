@@ -1,0 +1,529 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AdminSistema {
+  """Apellidos del administrador"""
+  apellidos: String!
+
+  """Email del administrador"""
+  email: String!
+
+  """Id del administrador del sistema"""
+  id: ID!
+
+  """Nombre del administrador"""
+  nombre: String!
+
+  """Teléfono del administrador"""
+  telefono: String
+
+  """Usuario asociado"""
+  usuario: Usuario!
+
+  """Id del usuario asociado"""
+  usuario_id: String!
+}
+
+type Cita {
+  """Fecha de creación de la cita"""
+  creadoEn: DateTime!
+
+  """Estado de la cita"""
+  estado: Estado!
+
+  """Fecha de la cita"""
+  fecha: DateTime!
+
+  """Hora de fin de la cita"""
+  hora_fin: String!
+
+  """Hora de inicio de la cita"""
+  hora_inicio: String!
+
+  """Id cita"""
+  id: ID!
+
+  """Servicio asociado a la cita"""
+  servicio: Servicio!
+
+  """Id del servicio asociado a la cita"""
+  servicio_id: String!
+
+  """Usuario asociado a la cita"""
+  usuario: Usuario!
+
+  """Id del usuario asociado a la cita"""
+  usuario_id: String!
+}
+
+type CitaPendienteDTO {
+  fecha: String!
+  servicio: String
+}
+
+"""Dashboard unificado con información agregada del negocio"""
+type DashboardNegocio {
+  """Total de citas del día"""
+  citasHoy: Int!
+
+  """ID del negocio"""
+  negocioId: String!
+
+  """Nombre del negocio"""
+  nombreNegocio: String!
+
+  """Personas en fila de espera"""
+  personasEnFila: Int!
+
+  """Tiempo promedio de atención en minutos"""
+  tiempoPromedioAtencion: Float!
+
+  """Total de estaciones activas"""
+  totalEstaciones: Int!
+
+  """Total de servicios visibles"""
+  totalServicios: Int!
+
+  """Total de usuarios registrados"""
+  totalUsuarios: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Estacion {
+  """Fecha de creación de la estación"""
+  creado_en: DateTime!
+
+  """Estado de la estación"""
+  estado: EstadoEstacion!
+
+  """Filas asociadas"""
+  filas: [Fila!]!
+
+  """Horarios de atención"""
+  horariosAtencion: [HorarioAtencion!]!
+
+  """Id de la estación"""
+  id: ID!
+
+  """Negocio asociado"""
+  negocio: Negocio!
+
+  """Id del negocio asociado"""
+  negocio_id: String!
+
+  """Nombre de la estación"""
+  nombre: String!
+}
+
+"""Estadísticas individuales de una estación"""
+type EstacionStats {
+  citasCompletadas: Int!
+  estacionId: String!
+  estado: String!
+  nombreEstacion: String!
+  personasEnEspera: Int!
+  tasaUso: Float!
+  totalCitas: Int!
+}
+
+"""Estadísticas y métricas de un servicio específico"""
+type EstadisticasServicio {
+  """Citas completadas"""
+  citasCompletadas: Int!
+
+  """Citas pendientes"""
+  citasPendientes: Int!
+
+  """Duración promedio real en minutos"""
+  duracionPromedio: Float!
+
+  """Ingresos generados en centavos"""
+  ingresosGenerados: Float!
+
+  """Nombre del servicio"""
+  nombreServicio: String!
+
+  """ID del servicio"""
+  servicioId: String!
+
+  """Tasa de conversión (completadas/total)"""
+  tasaConversion: Float!
+
+  """Total de citas para este servicio"""
+  totalCitas: Int!
+}
+
+"""Estados disponibles para las citas"""
+enum Estado {
+  ATENDIDA
+  CANCELADA
+  PENDIENTE
+}
+
+"""Estados disponibles para las estaciones"""
+enum EstadoEstacion {
+  ACTIVO
+  INACTIVO
+}
+
+"""Estados disponibles para las filas"""
+enum EstadoFila {
+  ABIERTA
+  CERRADA
+}
+
+type Fila {
+  """Fecha de creación de la fila"""
+  creado_en: DateTime!
+
+  """Estación asociada"""
+  estacion: Estacion!
+
+  """Id de la estación asociada"""
+  estacion_id: String!
+
+  """Estado de la fila"""
+  estado: EstadoFila!
+
+  """Fecha de la fila"""
+  fecha: DateTime!
+
+  """Hora de fin de la fila"""
+  hora_fin: String!
+
+  """Hora de inicio de la fila"""
+  hora_inicio: String!
+
+  """Id de la fila"""
+  id: ID!
+}
+
+"""Input para filtrar citas con múltiples criterios"""
+input FiltroCitasInput {
+  """Estado de la cita"""
+  estado: Estado
+
+  """Fecha de fin (YYYY-MM-DD)"""
+  fechaFin: String
+
+  """Fecha de inicio (YYYY-MM-DD)"""
+  fechaInicio: String
+
+  """Límite de resultados"""
+  limite: Int = 10
+
+  """Offset para paginación"""
+  offset: Int = 0
+
+  """ID del servicio"""
+  servicioId: String
+
+  """ID del usuario"""
+  usuarioId: String
+}
+
+type HorarioAtencion {
+  """Fecha de creación del horario"""
+  creado_en: DateTime!
+
+  """Día de la semana (0-6)"""
+  dia_semana: Int
+
+  """Estación asociada"""
+  estacion: Estacion!
+
+  """Id de la estación asociada"""
+  estacion_id: String!
+
+  """Hora de fin"""
+  hora_fin: String!
+
+  """Hora de inicio"""
+  hora_inicio: String!
+
+  """Id del horario de atención"""
+  id: ID!
+}
+
+"""Métricas temporales de citas con comparaciones"""
+type MetricasTemporales {
+  """Citas canceladas"""
+  citasCanceladas: Int!
+
+  """Citas completadas"""
+  citasCompletadas: Int!
+
+  """Comparación con período anterior (porcentaje)"""
+  comparacionPeriodoAnterior: Float!
+
+  """Período analizado (día, semana, mes)"""
+  periodo: String!
+
+  """Tasa de cumplimiento (completadas/total)"""
+  tasaCumplimiento: Float!
+
+  """Total de citas en el período"""
+  totalCitas: Int!
+
+  """Usuarios únicos atendidos"""
+  usuariosUnicos: Int!
+}
+
+type Negocio {
+  """Administrador del negocio"""
+  adminNegocio: Usuario!
+
+  """Id del administrador del negocio"""
+  admin_negocio_id: String!
+
+  """Categoría del negocio"""
+  categoria: String!
+
+  """Correo del negocio"""
+  correo: String
+
+  """Fecha de creación del negocio"""
+  creado_en: DateTime!
+
+  """Descripción del negocio"""
+  descripcion: String
+
+  """Estaciones del negocio"""
+  estaciones: [Estacion!]!
+
+  """Estado del negocio"""
+  estado: Boolean!
+
+  """Horario de atención"""
+  hora_atencion: String
+
+  """Id del negocio"""
+  id: ID!
+
+  """URL de la imagen del negocio"""
+  imagen_url: String
+
+  """Nombre del negocio"""
+  nombre: String!
+
+  """Teléfono del negocio"""
+  telefono: String
+}
+
+"""Perfil completo del usuario con información agregada"""
+type PerfilCompletoUsuario {
+  """Citas canceladas"""
+  citasCanceladas: Int!
+
+  """Citas completadas"""
+  citasCompletadas: Int!
+
+  """Citas pendientes"""
+  citasPendientes: Int!
+
+  """Email del usuario"""
+  email: String!
+
+  """ID del usuario"""
+  id: String!
+
+  """Nombre completo del usuario"""
+  nombre: String!
+
+  """Teléfono del usuario"""
+  telefono: String!
+
+  """Total de citas realizadas"""
+  totalCitas: Int!
+}
+
+type Query {
+  adminSistema(id: String!): AdminSistema!
+  adminsSistema: [AdminSistema!]!
+
+  """Búsqueda parametrizada de citas con múltiples filtros y paginación"""
+  buscarCitasAvanzado(
+    """Filtros para la búsqueda"""
+    filtros: FiltroCitasInput!
+  ): [Cita!]!
+  cita(id: String!): Cita!
+  citas: [Cita!]!
+  citasPorUsuario(usuarioId: String!): [Cita!]!
+
+  """Obtiene las próximas citas ordenadas por fecha con filtro de estado"""
+  citasProximas(
+    """Número de días hacia adelante"""
+    dias: Int! = 7
+
+    """Filtrar por estado de la cita"""
+    estado: Estado
+  ): [Cita!]!
+
+  """
+  Dashboard unificado con información agregada de múltiples entidades: negocios, estaciones, servicios, citas, usuarios y fila
+  """
+  dashboardNegocio(
+    """ID del negocio para obtener el dashboard"""
+    negocioId: String!
+  ): DashboardNegocio!
+  estacion(id: String!): Estacion!
+  estaciones: [Estacion!]!
+
+  """
+  Compara el rendimiento de todas las estaciones de un negocio con métricas de uso
+  """
+  estadisticasEstaciones(
+    """ID del negocio"""
+    negocioId: String!
+  ): [EstacionStats!]!
+
+  """
+  Estadísticas y métricas detalladas de un servicio específico con cálculos de conversión e ingresos
+  """
+  estadisticasServicio(
+    """ID del servicio"""
+    servicioId: String!
+  ): EstadisticasServicio!
+  fila(id: String!): Fila!
+  filas: [Fila!]!
+  horarioAtencion(id: String!): HorarioAtencion!
+  horariosAtencion: [HorarioAtencion!]!
+
+  """
+  Métricas temporales de citas con cálculos de tasas y comparaciones entre períodos
+  """
+  metricasTemporales(
+    """Fecha de inicio (YYYY-MM-DD)"""
+    fechaInicio: String
+
+    """Período a analizar: dia, semana, mes"""
+    periodo: String! = "mes"
+  ): MetricasTemporales!
+  negocio(id: String!): Negocio!
+  negocios: [Negocio!]!
+
+  """
+  Perfil completo del usuario con información agregada de citas y servicios utilizados
+  """
+  perfilCompletoUsuario(
+    """ID del usuario"""
+    usuarioId: String!
+  ): PerfilCompletoUsuario!
+
+  """
+  Resumen general de la actividad de un negocio con estadísticas de citas
+  """
+  resumenNegocio(
+    """ID del negocio para obtener el resumen"""
+    negocioId: String!
+  ): ResumenNegocio!
+  servicio(id: String!): Servicio!
+  servicios: [Servicio!]!
+  usuario(id: String!): Usuario!
+
+  """Obtener todos los usuarios"""
+  usuarios: [Usuario!]!
+
+  """
+  Lista los usuarios con sus citas atendidas, incluyendo detalles del servicio.
+  """
+  usuariosConCitasAtendidas: [UsuarioCitasDTO!]!
+
+  """
+  Lista los usuarios con sus citas pendientes, incluyendo detalles del servicio.
+  """
+  usuariosConCitasPendientes: [UsuarioCitasDTO!]!
+}
+
+type ResumenNegocio {
+  citasCompletadas: Int!
+  citasPendientes: Int!
+  negocioId: String!
+  totalCitas: Int!
+  totalEstaciones: Int!
+  totalServicios: Int!
+}
+
+"""Roles disponibles para los usuarios"""
+enum Rol {
+  ADMINNEGOCIO
+  ADMINSISTEMA
+  CLIENTE
+}
+
+type Servicio {
+  """Capacidad del servicio"""
+  capacidad: Int!
+
+  """Citas asociadas al servicio"""
+  citas: [Cita!]!
+
+  """Código del servicio"""
+  codigo: String
+
+  """Fecha de creación del servicio"""
+  creado_en: DateTime!
+
+  """Descripción del servicio"""
+  descripcion: String
+
+  """Duración en minutos del servicio"""
+  duracion_minutos: Int!
+
+  """Id del servicio"""
+  id: ID!
+
+  """Nombre del servicio"""
+  nombre: String!
+
+  """Precio en centavos del servicio"""
+  precio_centavos: Int!
+
+  """Indica si el servicio requiere cita"""
+  requiere_cita: Boolean!
+
+  """Indica si el servicio es visible"""
+  visible: Boolean!
+}
+
+type Usuario {
+  """Información de admin sistema"""
+  adminSistema: AdminSistema
+
+  """Citas del usuario"""
+  citas: [Cita!]!
+
+  """Fecha de creación del usuario"""
+  creado_en: DateTime!
+
+  """Correo electrónico del usuario"""
+  email: String!
+
+  """Id del usuario"""
+  id: ID!
+
+  """Negocios administrados por el usuario"""
+  negocios: [Negocio!]!
+
+  """Nombre completo del usuario"""
+  nombreCompleto: String!
+
+  """Contraseña del usuario"""
+  password: String!
+
+  """Rol del usuario"""
+  rol: Rol!
+
+  """Teléfono del usuario"""
+  telefono: String
+}
+
+type UsuarioCitasDTO {
+  citas: [CitaPendienteDTO!]!
+  usuario: String!
+}
