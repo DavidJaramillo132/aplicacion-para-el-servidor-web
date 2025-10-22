@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { HorariosAtencionService } from './horarios-atencion.service';
 import { CreateHorarioAtencionDto } from './dto/create-horario-atencion.dto';
 import { UpdateHorarioAtencionDto } from './dto/update-horario-atencion.dto';
@@ -32,5 +40,3 @@ export class HorariosAtencionController {
     return this.service.remove(id);
   }
 }
-
-

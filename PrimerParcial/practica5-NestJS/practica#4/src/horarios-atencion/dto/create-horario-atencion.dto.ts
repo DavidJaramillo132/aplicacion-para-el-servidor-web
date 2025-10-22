@@ -15,5 +15,3 @@ export class CreateHorarioAtencionDto {
   @IsString()
   hora_fin!: string;
 }
-
-

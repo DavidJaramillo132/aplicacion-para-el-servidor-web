@@ -10,5 +10,3 @@ import { HorariosAtencionController } from './horarios-atencion.controller';
   providers: [HorariosAtencionService],
 })
 export class HorariosAtencionModule {}
-
-

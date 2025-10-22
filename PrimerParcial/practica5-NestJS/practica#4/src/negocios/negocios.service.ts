@@ -22,7 +22,10 @@ export class NegociosService {
   }
 
   async findOne(id: string) {
-    const entity = await this.repo.findOne({ where: { id }, relations: ['estaciones'] });
+    const entity = await this.repo.findOne({
+      where: { id },
+      relations: ['estaciones'],
+    });
     if (!entity) throw new NotFoundException('Negocio no encontrado');
     return entity;
   }
@@ -39,5 +42,3 @@ export class NegociosService {
     return { id };
   }
 }
-
-

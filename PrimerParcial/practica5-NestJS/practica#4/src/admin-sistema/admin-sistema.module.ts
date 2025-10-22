@@ -10,5 +10,3 @@ import { AdminSistemaController } from './admin-sistema.controller';
   providers: [AdminSistemaService],
 })
 export class AdminSistemaModule {}
-
-

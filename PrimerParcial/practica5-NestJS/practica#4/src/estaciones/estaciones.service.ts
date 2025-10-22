@@ -22,7 +22,10 @@ export class EstacionesService {
   }
 
   async findOne(id: string) {
-    const entity = await this.repo.findOne({ where: { id }, relations: ['negocio'] });
+    const entity = await this.repo.findOne({
+      where: { id },
+      relations: ['negocio'],
+    });
     if (!entity) throw new NotFoundException('Estacion no encontrada');
     return entity;
   }
@@ -39,5 +42,3 @@ export class EstacionesService {
     return { id };
   }
 }
-
-

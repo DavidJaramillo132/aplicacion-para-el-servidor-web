@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AdminSistemaService } from './admin-sistema.service';
 import { CreateAdminSistemaDto } from './dto/create-admin-sistema.dto';
 import { UpdateAdminSistemaDto } from './dto/update-admin-sistema.dto';
@@ -32,5 +40,3 @@ export class AdminSistemaController {
     return this.service.remove(id);
   }
 }
-
-

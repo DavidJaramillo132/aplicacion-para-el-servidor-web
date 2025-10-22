@@ -21,7 +21,10 @@ export class ServiciosService {
   }
 
   async findOne(id: string) {
-    const entity = await this.repo.findOne({ where: { id }, relations: ['citas'] });
+    const entity = await this.repo.findOne({
+      where: { id },
+      relations: ['citas'],
+    });
     if (!entity) throw new NotFoundException('Servicio no encontrado');
     return entity;
   }

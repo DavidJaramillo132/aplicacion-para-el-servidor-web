@@ -12,5 +12,3 @@ export class CreateEstacionDto {
   @IsIn(['activo', 'inactivo'])
   estado?: 'activo' | 'inactivo';
 }
-
-
