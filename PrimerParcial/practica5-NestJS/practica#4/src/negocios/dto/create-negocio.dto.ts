@@ -1,4 +1,11 @@
-import { IsBoolean, IsEmail, IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateNegocioDto {
   @IsOptional()
@@ -35,5 +42,3 @@ export class CreateNegocioDto {
   @IsString()
   hora_atencion?: string;
 }
-
-

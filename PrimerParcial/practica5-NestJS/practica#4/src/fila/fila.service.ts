@@ -22,14 +22,20 @@ export class FilaService {
   }
 
   async findOne(id: string) {
-    const entity = await this.repo.findOne({ where: { id }, relations: ['estacion'] });
+    const entity = await this.repo.findOne({
+      where: { id },
+      relations: ['estacion'],
+    });
     if (!entity) throw new NotFoundException('Fila no encontrada');
     return entity;
   }
 
   async update(id: string, dto: UpdateFilaDto) {
     const entity = await this.findOne(id);
-    Object.assign(entity, dto.fecha ? { ...dto, fecha: new Date(dto.fecha) } : dto);
+    Object.assign(
+      entity,
+      dto.fecha ? { ...dto, fecha: new Date(dto.fecha) } : dto,
+    );
     return this.repo.save(entity);
   }
 
@@ -39,5 +45,3 @@ export class FilaService {
     return { id };
   }
 }
-
-

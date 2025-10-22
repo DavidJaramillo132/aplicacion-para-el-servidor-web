@@ -24,14 +24,20 @@ export class CitasService {
   }
 
   async findOne(id: string) {
-    const entity = await this.repo.findOne({ where: { id }, relations: ['usuario', 'servicio'] });
+    const entity = await this.repo.findOne({
+      where: { id },
+      relations: ['usuario', 'servicio'],
+    });
     if (!entity) throw new NotFoundException('Cita no encontrada');
     return entity;
   }
 
   async update(id: string, dto: UpdateCitaDto) {
     const entity = await this.findOne(id);
-    Object.assign(entity, dto.fecha ? { ...dto, fecha: new Date(dto.fecha) } : dto);
+    Object.assign(
+      entity,
+      dto.fecha ? { ...dto, fecha: new Date(dto.fecha) } : dto,
+    );
     return this.repo.save(entity);
   }
 

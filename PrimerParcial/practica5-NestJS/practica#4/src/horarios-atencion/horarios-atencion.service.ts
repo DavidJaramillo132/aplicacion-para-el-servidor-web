@@ -22,7 +22,10 @@ export class HorariosAtencionService {
   }
 
   async findOne(id: string) {
-    const entity = await this.repo.findOne({ where: { id }, relations: ['estacion'] });
+    const entity = await this.repo.findOne({
+      where: { id },
+      relations: ['estacion'],
+    });
     if (!entity) throw new NotFoundException('Horario no encontrado');
     return entity;
   }
@@ -39,5 +42,3 @@ export class HorariosAtencionService {
     return { id };
   }
 }
-
-

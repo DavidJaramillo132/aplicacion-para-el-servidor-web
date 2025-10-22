@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FilaService } from './fila.service';
 import { CreateFilaDto } from './dto/create-fila.dto';
 import { UpdateFilaDto } from './dto/update-fila.dto';
@@ -32,5 +40,3 @@ export class FilaController {
     return this.service.remove(id);
   }
 }
-
-

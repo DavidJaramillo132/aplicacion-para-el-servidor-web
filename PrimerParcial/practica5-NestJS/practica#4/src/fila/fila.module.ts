@@ -10,5 +10,3 @@ import { FilaController } from './fila.controller';
   providers: [FilaService],
 })
 export class FilaModule {}
-
-

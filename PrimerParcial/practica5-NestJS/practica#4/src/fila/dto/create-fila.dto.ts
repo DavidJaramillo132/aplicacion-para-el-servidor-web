@@ -1,4 +1,10 @@
-import { IsDateString, IsIn, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsDateString,
+  IsIn,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateFilaDto {
   @IsOptional()
@@ -18,5 +24,3 @@ export class CreateFilaDto {
   @IsIn(['abierta', 'cerrada'])
   estado?: 'abierta' | 'cerrada';
 }
-
-

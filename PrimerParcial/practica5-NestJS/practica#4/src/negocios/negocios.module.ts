@@ -11,5 +11,3 @@ import { NegociosController } from './negocios.controller';
   providers: [NegociosService],
 })
 export class NegociosModule {}
-
-

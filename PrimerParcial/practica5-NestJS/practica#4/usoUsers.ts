@@ -11,17 +11,17 @@ async function main() {
       email: 'jane.doe@example.com',
       password: 'secret123',
       rol: 'cliente',
-      telefono: '555-1234'
+      telefono: '555-1234',
     }),
-  }).then(r => r.json());
+  }).then((r) => r.json());
   console.log('CREATE ->', created);
 
   // READ ALL
-  const all = await fetch(base).then(r => r.json());
+  const all = await fetch(base).then((r) => r.json());
   console.log('FIND ALL ->', all.length, 'usuarios');
 
   // READ ONE
-  const one = await fetch(`${base}/${created.id}`).then(r => r.json());
+  const one = await fetch(`${base}/${created.id}`).then((r) => r.json());
   console.log('FIND ONE ->', one);
 
   // UPDATE
@@ -29,11 +29,13 @@ async function main() {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ telefono: '555-9999', rol: 'adminNegocio' }),
-  }).then(r => r.json());
+  }).then((r) => r.json());
   console.log('UPDATE ->', updated);
 
   // DELETE
-  const removed = await fetch(`${base}/${created.id}`, { method: 'DELETE' }).then(r => r.json());
+  const removed = await fetch(`${base}/${created.id}`, {
+    method: 'DELETE',
+  }).then((r) => r.json());
   console.log('DELETE ->', removed);
 }
 
