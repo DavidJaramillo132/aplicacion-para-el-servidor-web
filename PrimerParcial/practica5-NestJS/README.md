@@ -13,12 +13,12 @@ Implementar aplicaciones backend utilizando NestJS, un framework progresivo de N
 
 Esta carpeta contiene dos proyectos NestJS:
 
-1. **practica/** - Proyecto NestJS básico
-2. **practica#4/** - Proyecto NestJS con integración de base de datos SQLite y CRUD completo
+1. **practicaEnClase/** - Proyecto NestJS básico
+2. **TallerTarea/** - Proyecto NestJS con integración de base de datos SQLite y CRUD completo
 
 ## Instrucciones para Ejecutar los Proyectos
 
-### Proyecto 1: practica/
+### Proyecto 1: practicaEnClase/
 
 #### Pasos de Instalación
 
@@ -26,7 +26,7 @@ Esta carpeta contiene dos proyectos NestJS:
 
 2. Navegar hasta el directorio del proyecto:
    ```powershell
-   cd "c:\Users\djdav\OneDrive - ULEAM\IngenieriaSoftware\Quinto Semestre\aplicacion-para-el-servidor-web\PrimerParcial\practica5-NestJS\practica"
+   cd "c:\Users\djdav\OneDrive - ULEAM\IngenieriaSoftware\Quinto Semestre\aplicacion-para-el-servidor-web\PrimerParcial\practica5-NestJS\practicaEnClase"
    ```
 
 3. Instalar las dependencias del proyecto:
@@ -48,7 +48,7 @@ Este comando inicia el servidor en modo desarrollo con recarga automática.
 
 ---
 
-### Proyecto 2: practica#4/ (Proyecto Principal)
+### Proyecto 2: TallerTarea/ (Proyecto Principal)
 
 #### Descripción
 Este proyecto implementa un CRUD completo de usuarios con base de datos SQLite integrada.
@@ -59,7 +59,7 @@ Este proyecto implementa un CRUD completo de usuarios con base de datos SQLite i
 
 2. Navegar hasta el directorio del proyecto:
    ```powershell
-   cd "c:\Users\djdav\OneDrive - ULEAM\IngenieriaSoftware\Quinto Semestre\aplicacion-para-el-servidor-web\PrimerParcial\practica5-NestJS\practica#4"
+   cd "c:\Users\djdav\OneDrive - ULEAM\IngenieriaSoftware\Quinto Semestre\aplicacion-para-el-servidor-web\PrimerParcial\practica5-NestJS\TallerTarea"
    ```
 
 3. Instalar las dependencias del proyecto:
@@ -85,7 +85,7 @@ npm run start:prod
 ### Puerto de Ejecución
 - **http://localhost:3000**
 
-### Rutas Principales de Prueba (practica#4)
+### Rutas Principales de Prueba (TallerTarea)
 
 #### Usuarios (Users)
 
@@ -126,12 +126,12 @@ npm run start:prod
   ```
 
 ### Archivo de Pruebas
-El proyecto **practica#4** incluye un archivo `test-api.http` con ejemplos de todas las peticiones HTTP para probar la API fácilmente usando extensiones como REST Client de VS Code.
+El proyecto **TallerTarea** incluye un archivo `test-api.http` con ejemplos de todas las peticiones HTTP para probar la API fácilmente usando extensiones como REST Client de VS Code.
 
-## Estructura del Proyecto (practica#4)
+## Estructura del Proyecto (TallerTarea)
 
 ```
-practica#4/
+TallerTarea/
 ├── src/
 │   ├── main.ts              # Punto de entrada de la aplicación
 │   ├── app.module.ts        # Módulo raíz
@@ -206,7 +206,7 @@ practica#4/
 - **Postman** - Cliente HTTP alternativo
 - **DB Browser for SQLite** - Para visualizar la base de datos
 
-## Base de Datos (practica#4)
+## Base de Datos (TallerTarea)
 
 - **Motor**: SQLite
 - **Archivo**: `database.sqlite`
