@@ -1,4 +1,10 @@
 node_modules
 .env
-PrimerParcial/practica6-GraphQL-clase/graph-ql/
-PrimerParcial/practica6-GraphQL-clase/rest/
+
+dist
+build
+.venv
+__pycache__
+
+practica6-GraphQL-clase
+practica7-web-socket-clase
