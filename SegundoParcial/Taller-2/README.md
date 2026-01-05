@@ -40,6 +40,8 @@
 ## 👤 Autor
 
 **Kelly Dayana Canchingre Quevedo**  
+**David Javier Jaramillo Intriago**  
+**Kevin Calderon**  
 ULEAM • Servidores Web • Segundo Parcial  
 Profesor: Ing. Jhon Cevallos  
 Fecha de entrega: 8 de Diciembre, 2025  
