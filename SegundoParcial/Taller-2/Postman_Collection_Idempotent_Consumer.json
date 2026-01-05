@@ -1,0 +1,268 @@
+{
+  "info": {
+    "_postman_id": "sistema-transferencias-bancarias-2024",
+    "name": "Sistema Transferencias Bancarias - Idempotencia",
+    "description": "API para demostración de idempotencia en transferencias bancarias",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - TRANSFERENCIAS",
+      "item": [
+        {
+          "name": "GET - Todas las transferencias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        },
+        {
+          "name": "POST - Primera transferencia (150)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cuentaOrigenId\": 1,\n  \"cuentaDestinoId\": 3,\n  \"monto\": 150.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        },
+        {
+          "name": "POST - Misma transferencia (IDÉNTICA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cuentaOrigenId\": 1,\n  \"cuentaDestinoId\": 3,\n  \"monto\": 150.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        },
+        {
+          "name": "POST - Transferencia diferente (100)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cuentaOrigenId\": 2,\n  \"cuentaDestinoId\": 4,\n  \"monto\": 100.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - CUENTAS",
+      "item": [
+        {
+          "name": "GET - Todas las cuentas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/cuentas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["cuentas"]
+            }
+          }
+        },
+        {
+          "name": "GET - Cuenta ID 1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/cuentas/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["cuentas", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET - Cuenta ID 2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/cuentas/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["cuentas", "2"]
+            }
+          }
+        },
+        {
+          "name": "GET - Cuenta ID 3",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/cuentas/3",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["cuentas", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - DEMOSTRACIÓN IDEMPOTENCIA",
+      "item": [
+        {
+          "name": "INSTRUCCIÓN 1 - Lee esto primero",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        },
+        {
+          "name": "PASO 1 - Envía transferencia PRIMERA VEZ",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cuentaOrigenId\": 1,\n  \"cuentaDestinoId\": 2,\n  \"monto\": 250.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        },
+        {
+          "name": "PASO 2 - Envía LA MISMA transferencia SEGUNDA VEZ",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cuentaOrigenId\": 1,\n  \"cuentaDestinoId\": 2,\n  \"monto\": 250.00\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        },
+        {
+          "name": "PASO 3 - Verifica que el ID es el MISMO",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/transferencias",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["transferencias"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+╔════════════════════════════════════════════════════════════════╗
+║          CÓMO PROBAR QUE EL SISTEMA FUNCIONA CORRECTAMENTE      ║
+║              (Patrón Idempotent Consumer)                       ║
+╚════════════════════════════════════════════════════════════════╝
+
+════════════════════════════════════════════════════════════════════
+🎯 ¿QUÉ ESTAMOS PROBANDO?
+════════════════════════════════════════════════════════════════════
+
+El sistema implementa el patrón "Idempotent Consumer" que garantiza:
+
+✅ NO hay duplicados en transacciones financieras
+✅ Si envías la misma solicitud 2, 3, 10 veces → Solo se procesa 1 vez
+✅ El dinero se debita UNA SOLA VEZ (no 2, 3, 10 veces)
+✅ El sistema es seguro para reintentos automáticos
+
+
+════════════════════════════════════════════════════════════════════
+🧪 PRUEBA 1: Test Automatizado (RECOMENDADO)
+════════════════════════════════════════════════════════════════════
+
+Archivo: test_idempotencia.ps1
+
+CÓMO EJECUTAR:
+─────────────────────────────────────────────────────────────────
+
+1. Asegúrate de que Docker esté corriendo:
+   $ docker ps
+   # Debes ver 7 contenedores UP
+
+2. Ejecuta el test:
+   $ .\test_idempotencia.ps1
+
+3. Observa el resultado
+
+QUÉ HACE EL TEST:
+─────────────────────────────────────────────────────────────────
+
+PASO 1: Primera Solicitud
+- Envía una transferencia: Cuenta 1 → Cuenta 3, Monto: $150
+- Sistema crea: ID=1, Transaction=TXN_xxxx, Idempotency Key=abc123
+
+PASO 2: Segunda Solicitud (IDÉNTICA)
+- Envía EXACTAMENTE la misma solicitud
+- Sistema responde: ID=1 (¡MISMO ID!)
+- Transaction=TXN_xxxx (¡MISMO!)
+- Idempotency Key=abc123 (¡MISMO!)
+
+PASO 3: Verificación en Base de Datos
+- Consulta: ¿Cuántas transferencias con Key abc123?
+- Resultado: 1 (¡SOLO UNA!)
+
+RESULTADO ESPERADO:
+─────────────────────────────────────────────────────────────────
+
+✅ IDs en BD IGUALES: 1 = 1
+✅ Claves de idempotencia IGUALES
+✅ IDs de transacción IGUALES
+✅ Cantidad de registros: 1 (NO 2)
+✅ IDEMPOTENCIA FUNCIONANDO CORRECTAMENTE
+
+INTERPRETACIÓN:
+El sistema acepta la segunda solicitud SIN error, pero NO crea un 
+registro duplicado. Esto es EXACTAMENTE lo que queremos:
+- Cliente puede reintentar sin miedo
+- Dinero se debita UNA SOLA VEZ
+- No hay duplicados en la base de datos
+
+
+════════════════════════════════════════════════════════════════════
+🧪 PRUEBA 2: Test Manual con Postman
+════════════════════════════════════════════════════════════════════
+
+PREPARACIÓN:
+─────────────────────────────────────────────────────────────────
+
+1. Abre Postman
+2. Importa: Postman_Collection_Idempotent_Consumer.json
+3. Asegúrate de que Docker esté activo
+
+PASOS:
+─────────────────────────────────────────────────────────────────
+
+1. Obtener cuentas existentes:
+   GET http://localhost:3001/cuentas
+   
+   Respuesta: Lista de cuentas con sus IDs
+   Anota: ID de Cuenta Origen (ej: 1) y ID de Cuenta Destino (ej: 3)
+
+2. Crear primera transferencia:
+   POST http://localhost:3002/transferencias
+   Body:
+   {
+     "cuentaOrigenId": 1,
+     "cuentaDestinoId": 3,
+     "monto": 100.00
+   }
+   
+   Respuesta:
+   {
+     "id": 5,
+     "transferenciaId": "TXN_20251215_ABC123",
+     "estado": "PENDIENTE",
+     "idempotencyKey": "xyz789..."
+   }
+   
+   ⚠️ ANOTA: El "id" (5) y el "transferenciaId"
+
+3. Crear transferencia DUPLICADA (misma solicitud):
+   POST http://localhost:3002/transferencias
+   Body:
+   {
+     "cuentaOrigenId": 1,    ← MISMO
+     "cuentaDestinoId": 3,   ← MISMO
+     "monto": 100.00         ← MISMO
+   }
+   
+   Respuesta:
+   {
+     "id": 5,                                ← ¡MISMO ID!
+     "transferenciaId": "TXN_20251215_ABC123", ← ¡MISMO!
+     "estado": "PENDIENTE",
+     "idempotencyKey": "xyz789..."           ← ¡MISMO!
+   }
+
+4. Verificar en base de datos:
+   GET http://localhost:3002/transferencias
+   
+   Busca el ID 5 en la lista
+   Resultado: SOLO aparece UNA VEZ (no 2 veces)
+
+RESULTADO ESPERADO:
+─────────────────────────────────────────────────────────────────
+
+✅ Ambas solicitudes devuelven el MISMO ID
+✅ Ambas solicitudes devuelven el MISMO Transaction ID
+✅ En la BD solo hay 1 registro (no 2)
+✅ El dinero se debitó UNA SOLA VEZ
+
+SEÑALES DE QUE FUNCIONA CORRECTAMENTE:
+✓ No hay error 400/500 en la segunda solicitud
+✓ La respuesta es idéntica en ambas solicitudes
+✓ Al consultar transferencias, solo aparece 1 registro
+
+
+════════════════════════════════════════════════════════════════════
+🧪 PRUEBA 3: Verificar en Redis Cache
+════════════════════════════════════════════════════════════════════
+
+El sistema usa Redis como caché de 7 días para idempotencia.
+
+PASOS:
+─────────────────────────────────────────────────────────────────
+
+1. Ejecuta una transferencia (Postman o PowerShell)
+2. Anota el "idempotencyKey" de la respuesta
+3. Verifica en Redis:
+
+   $ docker exec -it redis-cache redis-cli
+   > GET idempotency:<tu_idempotency_key>
+   
+   Resultado: "1" (significa: procesado)
+   
+   > TTL idempotency:<tu_idempotency_key>
+   
+   Resultado: 604800 (7 días en segundos)
+
+4. Intenta crear duplicado
+5. Verifica que Redis devuelve el mismo valor
+
+INTERPRETACIÓN:
+Redis guarda la clave por 7 días para evitar duplicados durante
+ese periodo. Después de 7 días, PostgreSQL toma el relevo.
+
+
+════════════════════════════════════════════════════════════════════
+🧪 PRUEBA 4: Verificar en PostgreSQL
+════════════════════════════════════════════════════════════════════
+
+Después de 7 días, Redis borra la clave pero PostgreSQL la mantiene
+permanentemente.
+
+PASOS:
+─────────────────────────────────────────────────────────────────
+
+1. Conectar a PostgreSQL Worker:
+   Host: localhost
+   Port: 5434
+   User: postgres
+   Password: postgres123
+   Database: transferencias_db
+
+2. Ejecutar consulta:
+   
+   SELECT * FROM transferencias
+   WHERE idempotency_key = '<tu_key>'
+   ORDER BY fecha_creacion DESC;
+
+3. Verificar resultado:
+   - Solo debe haber 1 registro
+   - La fecha_creacion debe ser la misma que la primera solicitud
+   - El estado debe ser el esperado (PENDIENTE, COMPLETADA, etc.)
+
+INTERPRETACIÓN:
+PostgreSQL mantiene el registro para siempre, garantizando que
+incluso después de 7 días (cuando Redis expira), no hay duplicados.
+
+
+════════════════════════════════════════════════════════════════════
+📊 TABLA DE RESULTADOS ESPERADOS VS NO ESPERADOS
+════════════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────────┐
+│ ESCENARIO                  │ RESULTADO ESPERADO                │
+├────────────────────────────────────────────────────────────────┤
+│ Primera solicitud          │ Crea nuevo registro, ID=N         │
+│ Segunda solicitud (igual)  │ Devuelve MISMO ID=N (no crea)     │
+│ Cantidad en BD             │ 1 registro                        │
+│ Dinero debitado            │ UNA SOLA VEZ                      │
+│ Redis cache                │ Contiene la clave (7 días)        │
+│ PostgreSQL                 │ Contiene el registro (permanente) │
+│ Error en segunda solicitud │ NO (200 OK)                       │
+└────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────┐
+│ ESCENARIO FALLIDO         │ SEÑAL DE PROBLEMA                  │
+├────────────────────────────────────────────────────────────────┤
+│ Segunda solicitud          │ Crea NUEVO ID (ID=N+1)            │
+│ Cantidad en BD             │ 2 o más registros                 │
+│ Dinero debitado            │ DOS o más veces                   │
+│ Error 500                  │ Sistema no maneja idempotencia    │
+│ IDs diferentes             │ No está usando cache              │
+└────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════
+🎓 EXPLICACIÓN PARA LA PRESENTACIÓN
+════════════════════════════════════════════════════════════════════
+
+HISTORIA DEL PROBLEMA:
+───────────────────────────────────────────────────────────────────
+
+"Imagina que transfieres $1000 a un amigo. Haces click en 'Enviar'.
+La red falla. Tu app reintenta automáticamente. Sin idempotencia,
+tu amigo recibe $2000. ¡PROBLEMA!"
+
+SOLUCIÓN (Idempotent Consumer):
+───────────────────────────────────────────────────────────────────
+
+1. Primera solicitud:
+   - Sistema genera ID único (idempotency key)
+   - Guarda en Redis + PostgreSQL
+   - Procesa transferencia
+   - Debita $1000
+
+2. Segunda solicitud (reintento):
+   - Sistema ve: "Ya procesé esta clave"
+   - Devuelve MISMO resultado
+   - NO procesa nuevamente
+   - NO debita más dinero
+
+3. Resultado:
+   - Tu amigo recibe $1000 (correcto)
+   - No hay duplicados
+   - Sistema es seguro para reintentos
+
+DEMOSTRACIÓN EN VIVO:
+───────────────────────────────────────────────────────────────────
+
+1. Ejecuta: .\test_idempotencia.ps1
+2. Muestra salida en pantalla:
+   - Primera solicitud: ID=1
+   - Segunda solicitud: ID=1 (¡MISMO!)
+   - Cantidad en BD: 1 (¡NO 2!)
+3. Conclusión: "Dinero debitado UNA SOLA VEZ"
+
+
+════════════════════════════════════════════════════════════════════
+✅ CHECKLIST DE VERIFICACIÓN
+════════════════════════════════════════════════════════════════════
+
+Antes de la presentación, verifica:
+
+□ Docker está activo (7 servicios UP)
+□ Test automatizado pasa (.\test_idempotencia.ps1)
+□ Postman tiene la colección importada
+□ Puedes acceder a http://localhost:3000, 3001, 3002
+□ Puedes acceder a RabbitMQ: http://localhost:15672
+□ Redis funciona: docker exec redis-cache redis-cli PING
+□ PostgreSQL responde: psql -h localhost -p 5434 -U postgres
+
+Para demostración en vivo:
+□ Tienes el test listo para ejecutar
+□ Sabes explicar el resultado esperado
+□ Puedes mostrar en BD que solo hay 1 registro
+□ Entiendes por qué "mismo ID" = idempotencia funciona
+
+
+════════════════════════════════════════════════════════════════════
+📝 RESUMEN EJECUTIVO
+════════════════════════════════════════════════════════════════════
+
+¿Qué probamos?
+  Que el sistema NO crea transacciones duplicadas
+
+¿Cómo lo probamos?
+  Enviando la misma solicitud 2 veces y verificando que:
+  1. Devuelve el MISMO ID
+  2. Solo hay 1 registro en BD
+  3. Dinero debitado UNA SOLA VEZ
+
+¿Qué herramientas usamos?
+  - test_idempotencia.ps1 (automatizado)
+  - Postman (manual)
+  - Redis CLI (cache)
+  - PostgreSQL (persistencia)
+
+¿Resultado esperado?
+  ✅ Sistema acepta reintentos SIN duplicar
+  ✅ Dinero seguro
+  ✅ Idempotencia funciona correctamente
+
+
+════════════════════════════════════════════════════════════════════
+FIN - GUÍA DE PRUEBAS
+════════════════════════════════════════════════════════════════════
